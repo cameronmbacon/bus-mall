@@ -30,4 +30,4 @@
 
 * As a developer, I want to not display any results until the participant has made 25 selections, in order to deter participants from influencing the data.
 
-* As the developer, I want to style and customize the application, in order to improve the companies online image.
+* As the developer, I want to style and customize the application, in order to improve the company's online image.
