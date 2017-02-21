@@ -1,24 +1,23 @@
 //LET'S BREAK THIS DOWN A BIT!
 //---------------------------------------------------------------------
-// * fix checkRandomNumber function
-// * fix event listener
-// * control the flow of the survey by concluding it after the participant has made 25 selections (clicks)
+// * fix checkRandomNumber function - CHECK!
+// * fix displayProducts function - CHECK!
+// * fix event listener -
+// * control the flow of the survey by concluding it after the participant has made 25 selections (clicks) -
 //-----------------------------------------------------------------------
 
 //GLOBAL VARIABLES
 var sectionEl = document.getElementById('survey-content');
-// TO DO:
-//consider adding left, right, and center image elements
-//add a global variable for the click limit and total clicks
+var clickLimit = 5; //set to 5 for ease of testing
+var totalClicks = 0;
 
 //CONSTRUCTOR FUNCTION for generating products
 function Product(productName, imageURL, elementID) {
   this.productName = productName;
   this.productImage = imageURL;
   this.elementID = elementID;
-  this.figureEl;
   this.imageEl;
-  this.numberOfDisplays = 0;
+  this.numberOfViews = 0;
   this.numberOfClicks = 0;
   this.clicksVsDisplayPercentage = 0;
 }
@@ -33,18 +32,18 @@ var productProperties = [
   ['bubblegum', 'img/bubblegum.jpg', 'bubblegumEl'],
   ['chair', 'img/chair.jpg', 'chairEl'],
   ['cthulhu', 'img/cthulhu.jpg', 'cthulhuEl'],
-  ['dog duck', 'img/dog-duck.jpg', 'dogDuckEl'],
+  ['dog-duck', 'img/dog-duck.jpg', 'dogDuckEl'],
   ['dragon', 'img/dragon.jpg', 'dragonEl'],
   ['pen', 'img/pen.jpg', 'penEl'],
-  ['pet sweep', 'img/pet-sweep.jpg', 'petSweepEl'],
+  ['pet-sweep', 'img/pet-sweep.jpg', 'petSweepEl'],
   ['scissors', 'img/scissors.jpg', 'scissorsEl'],
   ['shark', 'img/shark.jpg', 'sharkEl'],
   ['sweep', 'img/sweep.png', 'sweepEl'],
   ['tauntaun', 'img/tauntaun.jpg', 'tauntaunEl'],
   ['unicorn', 'img/unicorn.jpg', 'unicornEl'],
   ['usb', 'img/usb.gif', 'usbEl'],
-  ['water can', 'img/water-can.jpg', 'waterCanEl'],
-  ['wine glass', 'img/wine-glass.jpg', 'wineGlassEl']
+  ['water-can', 'img/water-can.jpg', 'waterCanEl'],
+  ['wine-glass', 'img/wine-glass.jpg', 'wineGlassEl']
 ];
 
 //PRODUCTS ARRAY: new objects are declared inside of the array
@@ -53,130 +52,122 @@ var products = [];
 //this array stores the random numbers for the currently displayed products
 var currentRandomNumbers = [];
 
-//this array stores the random numbers from the 3 previously displayed products
-var oldRandomNumbers = [-1, -1, -1];
-
 // FUNCTION DECLARATIONS
 //iterates with constructor function and pushes objects into PRODUCTS ARRAY
 function createProducts() {
-
   for (var i = 0; i < productProperties.length; i++) {
-
     products.push(new Product(productProperties[i][0], productProperties[i][1], productProperties[i][2]));
   }
 };
 
 //generates the random number used to access products from products array
 function getRandomNumber() {
-
-  var randomNumber = Math.floor(Math.random() * productProperties.length);
-
-  return randomNumber;
+  return Math.floor(Math.random() * productProperties.length);
 };
 
-//validates the random number selections before displaying products on page
+//validates the random number selections before displaying products on page then populates currentRandomNumbers array with the random numbers
 function checkRandomNumbers() {
+  var leftIndex = getRandomNumber();
+  var centerIndex = getRandomNumber();
+  var rightIndex = getRandomNumber();
 
-  for (var i = 0; i < 3; i++) {
-
-    var randomNumber = getRandomNumber();
-
-    var validOption = false;
-
-    while (!validOption) {
-      if (randomNumber !== oldRandomNumbers[0] && randomNumber !== oldRandomNumbers[1] && randomNumber !== oldRandomNumbers[2]) {
-        if (i > 0) {
-          if (randomNumber === currentRandomNumbers[i - 1] || randomNumber === currentRandomNumbers[i - 2]) {
-            randomNumber = getRandomNumber();
-          } else {
-            validOption = true;
-            currentRandomNumbers.push(randomNumber);
-            products[i].numberOfDisplays++;
-          } //end of innermost if/else statement
-        } else {
-          validOption = true;
-          currentRandomNumbers.push(randomNumber);
-          products[i].numberOfDisplays++;
-        }
-      } else {
-        randomNumber = getRandomNumber();
-      } //end of outermost if/else statement
-    }; //end of while loop
+  while (currentRandomNumbers.includes(leftIndex)) {
+    leftIndex = getRandomNumber();
   }
 
-  oldRandomNumbers = currentRandomNumbers;
+  while (centerIndex === leftIndex || currentRandomNumbers.includes(centerIndex)) {
+    centerIndex = getRandomNumber();
+  }
 
+  while (rightIndex === centerIndex || rightIndex === leftIndex || currentRandomNumbers.includes(rightIndex)) {
+    rightIndex = getRandomNumber();
+  }
+
+  currentRandomNumbers = [leftIndex, centerIndex, rightIndex];
 };
-//MORNING SOLUTION: declare left, center and right index and assign random numbers
-//USE ARRAY METHOD includes()
-//while the left index is included in currentlyShowing array, get a new random number
-//while center is equal to left OR center index is included in currentlyShowing array, get a new random numbers,
-//while right is equal to left OR center OR right index is included in the currentlyShowing array, get a new random number
-//increment the views of the left hand product by 1
 
 //renders the product image to the page
 function renderProductsToPage() {
-
   for (var i = 0; i < currentRandomNumbers.length; i++) {
-    products[currentRandomNumbers[i]].figureEl = document.createElement('figure');
-    products[currentRandomNumbers[i]].figureEl.setAttribute('id', products[currentRandomNumbers[i]].elementID);
-
     products[currentRandomNumbers[i]].imageEl = document.createElement('img');
+
     products[currentRandomNumbers[i]].imageEl.setAttribute('src', products[currentRandomNumbers[i]].productImage);
     products[currentRandomNumbers[i]].imageEl.setAttribute('alt', products[currentRandomNumbers[i]].productName);
+    products[currentRandomNumbers[i]].imageEl.setAttribute('id', products[currentRandomNumbers[i]].productName);
 
-    products[currentRandomNumbers[i]].imageEl.addEventListener('click', products[currentRandomNumbers[i]].handleClick);
+    products[currentRandomNumbers[i]].imageEl.addEventListener('click', handleClick);
 
-    products[currentRandomNumbers[i]].figureEl.appendChild(products[currentRandomNumbers[i]].imageEl);
-    sectionEl.appendChild(products[currentRandomNumbers[i]].figureEl);
+    sectionEl.appendChild(products[currentRandomNumbers[i]].imageEl);
+
+    products[currentRandomNumbers[i]].numberOfViews++;
   }
 };
 
-//renders results to page at conclusion of survey
-function renderResultsToPage() {
-  var unorderedEl = document.createElement('ul');
+// //renders results to page at conclusion of survey
+// function renderResultsToPage() {
+//   var unorderedEl = document.createElement('ul');
+//
+//   for (var i = 0; i < products.length; i++) {
+//     var resultsMessage = products[i].numberOfClicks + 'votes for ' + products[i].productName;
+//
+//     var listItemEl = document.createElement('li');
+//     listItemEl.textContent = resultsMessage;
+//
+//     unorderedEl.appendChild(listItemEl);
+//   }
+//
+//   sectionEl.appendChild(unorderedEl);
+// }
 
-  for (var i = 0; i < products.length; i++) {
-    var resultsMessage = products[i].numberOfClicks + 'votes for ' + products[i].productName;
+//handles the click event
+function handleClick(event) {
+  if (totalClicks < clickLimit) {
+    console.log('User made a selection.');
 
-    var listItemEl = document.createElement('li');
-    listItemEl.textContent = resultsMessage;
+    var leftImageEl = products[currentRandomNumbers[0]].imageEl;
+    var centerImageEl = products[currentRandomNumbers[1]].imageEl;
+    var rightImageEl = products[currentRandomNumbers[2]].imageEl;
 
-    unorderedEl.appendChild(listItemEl);
+    var clickedEliD = event.target.getAttribute('id');
+
+    if (clickedEliD === leftImageEl) {
+      products[currentRandomNumbers[0]].numberOfClicks++;
+
+    } else if (clickedEliD === centerImageEl) {
+      products[currentRandomNumbers[1]].numberOfClicks++;
+
+    } else if (clickedEliD === rightImageEl) {
+      products[currentRandomNumbers[2]].numberOfClicks++;
+    }
+
+    sectionEl.removeChild(leftImageEl);
+    sectionEl.removeChild(centerImageEl);
+    sectionEl.removeChild(rightImageEl);
+
+    totalClicks++;
+    checkRandomNumbers();
+    renderProductsToPage();
+  } else {
+    console.log('End of survey. User has made ' + clickLimit + ' selections.');
   }
-
-  sectionEl.appendChild(unorderedEl);
-}
+};
 
 //PROTOTYPE METHODS
-//handles the click event
-Product.prototype.handleClick = function(event) {
-  event.stopPropagation();
-
-  this.numberOfClicks++;
-};
-//MORNING SOLUTION: if less than click limit, display images and increment total clicks
-//
-
 //calculates the percentages and displays them to page
 Product.prototype.getPercentage = function() {
-  this.clicksVsDisplayPercentage = this.numberOfClicks / this.numberOfDisplays;
-
-  return this.clicksVsDisplayPercentage;
+  return this.numberOfClicks / this.numberOfDisplays;
 };
 
-//CONSOLE LOGS FOR DEBUGGING
+//--------------------CONSOLE LOGS FOR DEBUGGING-----------------------
 createProducts(); //needs to be called in order to populate arrays
 
-console.log(productProperties);
-
-console.log(products);
-
-console.log(oldRandomNumbers);
+// console.log(productProperties);
+// console.log(products);
+//
+// console.log(currentRandomNumbers);
+//
 checkRandomNumbers();
-console.log(currentRandomNumbers);
-console.log(oldRandomNumbers);
-
+// console.log(currentRandomNumbers);
+//
 renderProductsToPage();
-
-renderResultsToPage();
+// console.log(products);
