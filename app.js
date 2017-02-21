@@ -121,11 +121,11 @@ function renderProductsToPage() {
     products[currentRandomNumbers[i]].figureEl = document.createElement('figure');
     products[currentRandomNumbers[i]].figureEl.setAttribute('id', products[currentRandomNumbers[i]].elementID);
 
-    products[currentRandomNumbers[i]].figureEl.addEventListener('click', products[currentRandomNumbers[i]].handleClick);
-
     products[currentRandomNumbers[i]].imageEl = document.createElement('img');
     products[currentRandomNumbers[i]].imageEl.setAttribute('src', products[currentRandomNumbers[i]].productImage);
     products[currentRandomNumbers[i]].imageEl.setAttribute('alt', products[currentRandomNumbers[i]].productName);
+
+    products[currentRandomNumbers[i]].imageEl.addEventListener('click', products[currentRandomNumbers[i]].handleClick);
 
     products[currentRandomNumbers[i]].figureEl.appendChild(products[currentRandomNumbers[i]].imageEl);
     sectionEl.appendChild(products[currentRandomNumbers[i]].figureEl);
@@ -155,6 +155,8 @@ Product.prototype.handleClick = function(event) {
 
   this.numberOfClicks++;
 };
+//MORNING SOLUTION: if less than click limit, display images and increment total clicks
+//
 
 //calculates the percentages and displays them to page
 Product.prototype.getPercentage = function() {
