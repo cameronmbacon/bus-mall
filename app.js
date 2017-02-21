@@ -23,14 +23,45 @@ function Product(productName, imageURL, elementID) {
 var products = [];
 
 //PROPERTIES ARRAY: this is where I store my objects' properties
-var productProperties = [['bag', 'img/bag.jpg', 'bagEl'], ['banana', 'img/banana.jpg', 'bananaEl'], ['bathroom', 'img/bathroom.jpg', 'bathroomEl'], ['boots', 'img/boots.jpg', 'bootsEl'], ['breakfast', 'img/breakfast.jpg', 'breakfastEl'], ['bubblegum', 'img/bubblegum.jpg', 'bubblegumEl'], ['chair', 'img/chair.jpg', 'chairEl'], ['cthulhu', 'img/cthulhu.jpg', 'cthulhuEl'], ['dog duck', 'img/dog-duck', 'dogDuckEl'], ['dragon', 'img/dragon.jpg', 'dragonEl'], ['pen', 'img/pen.jpg', 'penEl'], ['pet sweep', 'img/pet-sweep.jpg', 'petSweepEl'], ['scissors', 'img/scissors.jpg', 'scissorsEl'], ['shark', 'img/shark.jpg', 'sharkEl'], ['sweep', 'img/sweep.png', 'sweepEl'], ['tauntaun', 'img/tauntaun.jpg', 'tauntaunEl'], ['unicorn', 'img/uncicorn.jpg', 'unicornEl'], ['usb', 'img/usb.gif', 'usbEl'], ['water can', 'img/water-can.jpg', 'waterCanEl'], ['wine glass', 'img/wine-glass.jpg', 'wineGlassEl']];
+var productProperties = [
+  ['bag', 'img/bag.jpg', 'bagEl'],
+  ['banana', 'img/banana.jpg', 'bananaEl'],
+  ['bathroom', 'img/bathroom.jpg', 'bathroomEl'],
+  ['boots', 'img/boots.jpg', 'bootsEl'],
+  ['breakfast', 'img/breakfast.jpg', 'breakfastEl'],
+  ['bubblegum', 'img/bubblegum.jpg', 'bubblegumEl'],
+  ['chair', 'img/chair.jpg', 'chairEl'],
+  ['cthulhu', 'img/cthulhu.jpg', 'cthulhuEl'],
+  ['dog duck', 'img/dog-duck', 'dogDuckEl'],
+  ['dragon', 'img/dragon.jpg', 'dragonEl'],
+  ['pen', 'img/pen.jpg', 'penEl'],
+  ['pet sweep', 'img/pet-sweep.jpg', 'petSweepEl'],
+  ['scissors', 'img/scissors.jpg', 'scissorsEl'],
+  ['shark', 'img/shark.jpg', 'sharkEl'],
+  ['sweep', 'img/sweep.png', 'sweepEl'],
+  ['tauntaun', 'img/tauntaun.jpg', 'tauntaunEl'],
+  ['unicorn', 'img/uncicorn.jpg', 'unicornEl'],
+  ['usb', 'img/usb.gif', 'usbEl'],
+  ['water can', 'img/water-can.jpg', 'waterCanEl'],
+  ['wine glass', 'img/wine-glass.jpg', 'wineGlassEl']
+];
 
+//ensuring my arrays are populated
 console.log('There are ' + productProperties.length + ' sets of property parameters in productProperties array.');
 
+console.log(productProperties);
+
 //GLOBAL FUNCTION that iterates with constructor function and pushes objects into PRODUCTS ARRAY
-// function generateProductsToArray() {
-//
-//   for (var i = 0; i < productProperties.length; i++) {
-//     new Product(name, imgURL, iD);
-//   }
-// }
+function createProducts() {
+
+  for (var i = 0; i < productProperties.length; i++) {
+
+    var newProduct = new Product(productProperties[i][0], productProperties[i][1], productProperties[i][2]);
+
+    products.push(newProduct);
+  }
+}
+
+createProducts();
+
+console.log(products);
