@@ -1,18 +1,17 @@
 .wrapper {
-  width: 90%;
+  width: 80%;
+  min-width: 640px;
   margin: 0 auto;
 }
 
-figure {
-  display: inline-block;
-  width: 30%;
-  height: 100%;
-  margin: 0 auto;
-  border-collapse: collapse;
+#survey-content {
+  width: 100%;
+  text-align: center;
 }
 
 img {
   margin: 0 auto;
-  width: 500px;
+  width: 30%;
   height: 500px;
+  border: 2px solid black;
 }
