@@ -1,14 +1,15 @@
 //LET'S BREAK THIS DOWN A BIT!
 //---------------------------------------------------------------------
-//5. write a global function that: renders the data to the page for the participant to view at the conclusion of the survey.
-//6. write a prototype method that: counts the number of times an object was displayed.
-//7. write a prototype method that: counts the number of times an object was clicked.
-//8. write a prototype method that: calculates a percentage based on the number of times an object was displayed versus the number of times it was clicked.
-//9. control the flow of the survey by concluding it after the participant has made 25 selections (clicks).
+// * fix checkRandomNumber function
+// * fix event listener
+// * control the flow of the survey by concluding it after the participant has made 25 selections (clicks)
 //-----------------------------------------------------------------------
 
 //GLOBAL VARIABLES
 var sectionEl = document.getElementById('survey-content');
+// TO DO:
+//consider adding left, right, and center image elements
+//add a global variable for the click limit and total clicks
 
 //CONSTRUCTOR FUNCTION for generating products
 function Product(productName, imageURL, elementID) {
@@ -32,7 +33,7 @@ var productProperties = [
   ['bubblegum', 'img/bubblegum.jpg', 'bubblegumEl'],
   ['chair', 'img/chair.jpg', 'chairEl'],
   ['cthulhu', 'img/cthulhu.jpg', 'cthulhuEl'],
-  ['dog duck', 'img/dog-duck', 'dogDuckEl'],
+  ['dog duck', 'img/dog-duck.jpg', 'dogDuckEl'],
   ['dragon', 'img/dragon.jpg', 'dragonEl'],
   ['pen', 'img/pen.jpg', 'penEl'],
   ['pet sweep', 'img/pet-sweep.jpg', 'petSweepEl'],
@@ -53,21 +54,21 @@ var products = [];
 var currentRandomNumbers = [];
 
 //this array stores the random numbers from the 3 previously displayed products
-var oldRandomNumbers = [];
+var oldRandomNumbers = [-1, -1, -1];
 
-//GLOBAL FUNCTION that iterates with constructor function and pushes objects into PRODUCTS ARRAY
+// FUNCTION DECLARATIONS
+//iterates with constructor function and pushes objects into PRODUCTS ARRAY
 function createProducts() {
 
   for (var i = 0; i < productProperties.length; i++) {
 
-    var newProduct = new Product(productProperties[i][0], productProperties[i][1], productProperties[i][2]);
-
-    products.push(newProduct);
+    products.push(new Product(productProperties[i][0], productProperties[i][1], productProperties[i][2]));
   }
 };
 
 //generates the random number used to access products from products array
 function getRandomNumber() {
+
   var randomNumber = Math.floor(Math.random() * productProperties.length);
 
   return randomNumber;
@@ -85,7 +86,7 @@ function checkRandomNumbers() {
     while (!validOption) {
       if (randomNumber !== oldRandomNumbers[0] && randomNumber !== oldRandomNumbers[1] && randomNumber !== oldRandomNumbers[2]) {
         if (i > 0) {
-          if (randomNumber === currentRandomNumbers[i - 1]) {
+          if (randomNumber === currentRandomNumbers[i - 1] || randomNumber === currentRandomNumbers[i - 2]) {
             randomNumber = getRandomNumber();
           } else {
             validOption = true;
@@ -102,7 +103,16 @@ function checkRandomNumbers() {
       } //end of outermost if/else statement
     }; //end of while loop
   }
+
+  oldRandomNumbers = currentRandomNumbers;
+
 };
+//MORNING SOLUTION: declare left, center and right index and assign random numbers
+//USE ARRAY METHOD includes()
+//while the left index is included in currentlyShowing array, get a new random number
+//while center is equal to left OR center index is included in currentlyShowing array, get a new random numbers,
+//while right is equal to left OR center OR right index is included in the currentlyShowing array, get a new random number
+//increment the views of the left hand product by 1
 
 //renders the product image to the page
 function renderProductsToPage() {
@@ -162,8 +172,8 @@ console.log(products);
 
 console.log(oldRandomNumbers);
 checkRandomNumbers();
-console.log(oldRandomNumbers);
 console.log(currentRandomNumbers);
+console.log(oldRandomNumbers);
 
 renderProductsToPage();
 
