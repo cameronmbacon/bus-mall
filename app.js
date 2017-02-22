@@ -7,9 +7,6 @@
 
 //GLOBAL VARIABLES
 var sectionEl = document.getElementById('survey-content');
-// TO DO:
-//consider adding left, right, and center image elements
-//add a global variable for the click limit and total clicks
 
 //CONSTRUCTOR FUNCTION for generating products
 function Product(productName, imageURL, elementID) {
