@@ -15,3 +15,9 @@ img {
   height: 500px;
   border: 2px solid black;
 }
+
+#pie-chart {
+  max-width: 60%;
+  height: 500px;
+  margin: 0 auto;
+}

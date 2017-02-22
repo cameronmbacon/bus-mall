@@ -13,9 +13,9 @@ var clickLimit = 10;
 var totalClicks = 0;
 
 //CONSTRUCTOR FUNCTION for generating products
-function Product(productName, imageURL, elementID) {
+function Product(productName, imagePath, elementID) {
   this.productName = productName;
-  this.productImage = imageURL;
+  this.productImage = imagePath;
   this.elementID = elementID;
   this.imageEl;
   this.numberOfViews = 0;
@@ -111,7 +111,7 @@ function renderResultsToPage() {
   var pieCtx = document.getElementById('pie-chart').getContext('2d');
 
   var barData = [];
-  var pieData = [];
+  var pieData = []; //Mmmmmm
 
   var labelColors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet', 'red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet', 'red', 'orange', 'yellow', 'green', 'blue', 'indigo'];
 
@@ -160,6 +160,7 @@ function renderResultsToPage() {
       }],
     },
     options: {
+      circumference: (2 * Math.PI),
       scales: {
         yAxes: [{
           ticks: {
@@ -177,13 +178,13 @@ function renderResultsToPage() {
 function handleClick(event) {
   totalClicks++;
 
+  var leftImageEl = products[currentRandomNumbers[0]].imageEl;
+  var centerImageEl = products[currentRandomNumbers[1]].imageEl;
+  var rightImageEl = products[currentRandomNumbers[2]].imageEl;
+
+  var clickedEliD = event.target.getAttribute('id');
+
   if (totalClicks < clickLimit) {
-
-    var leftImageEl = products[currentRandomNumbers[0]].imageEl;
-    var centerImageEl = products[currentRandomNumbers[1]].imageEl;
-    var rightImageEl = products[currentRandomNumbers[2]].imageEl;
-
-    var clickedEliD = event.target.getAttribute('id');
 
     if (clickedEliD === leftImageEl.id) {
       products[currentRandomNumbers[0]].numberOfClicks++;
@@ -202,6 +203,11 @@ function handleClick(event) {
     checkRandomNumbers();
     renderProductsToPage();
   } else {
+    var leftImageEl = products[currentRandomNumbers[0]].imageEl;
+    var centerImageEl = products[currentRandomNumbers[1]].imageEl;
+    var rightImageEl = products[currentRandomNumbers[2]].imageEl;
+
+    var clickedEliD = event.target.getAttribute('id');
     renderResultsToPage();
   }
 };
@@ -209,7 +215,7 @@ function handleClick(event) {
 //PROTOTYPE METHODS
 //calculates the percentages and displays them to page
 Product.prototype.getPercentage = function() {
-  return this.numberOfClicks / this.numberOfViews;
+  return (this.numberOfClicks / this.numberOfViews) * 100;
 };
 
 //--------------------START OF APPLICATION-----------------------
