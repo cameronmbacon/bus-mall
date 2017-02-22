@@ -9,7 +9,7 @@
 //GLOBAL VARIABLES
 var sectionEl = document.getElementById('survey-content');
 var chartEl = document.getElementById('chart');
-var clickLimit = 5;
+var clickLimit = 10;
 var totalClicks = 0;
 
 //CONSTRUCTOR FUNCTION for generating products
@@ -20,7 +20,7 @@ function Product(productName, imageURL, elementID) {
   this.imageEl;
   this.numberOfViews = 0;
   this.numberOfClicks = 0;
-  this.clicksVsDisplayPercentage = 0;
+  this.percentage = 0;
 }
 
 //properties array: this is where I store my objects' properties
@@ -105,19 +105,72 @@ function renderProductsToPage() {
 };
 
 //renders results to page at conclusion of survey
+//NOW UTILIZES Charts.js LIBRARY!!!
 function renderResultsToPage() {
-  var unorderedEl = document.createElement('ul');
+  var ctx = document.getElementById('chart').getContext('2d');
+  var pieCtx = document.getElementById('pie-chart').getContext('2d');
+
+  var barData = [];
+  var pieData = [];
+
+  var labelColors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet', 'red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet', 'red', 'orange', 'yellow', 'green', 'blue', 'indigo'];
+
+  var labels = [];
 
   for (var i = 0; i < products.length; i++) {
-    var resultsMessage = products[i].numberOfClicks + ' votes for ' + products[i].productName;
+    products[i].percentage = products[i].getPercentage();
+    pieData.push(products[i].percentage);
 
-    var listItemEl = document.createElement('li');
-    listItemEl.textContent = resultsMessage;
+    barData.push(products[i].numberOfClicks);
 
-    unorderedEl.appendChild(listItemEl);
+    labels.push(products[i].productName);
   }
 
-  chartEl.appendChild(unorderedEl);
+  var barChartData = {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: labels,
+        data: barData,
+        backgroundColor: labelColors
+      }],
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  };
+
+  var myBarChart = new Chart(ctx, barChartData);
+
+  var pieChartData = {
+    type: 'pie',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: labels,
+        data: pieData,
+        backgroundColor: labelColors
+      }],
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  };
+
+  var myPieChart = new Chart(pieCtx, pieChartData);
 }
 
 //handles the click event and controls flow of survey
@@ -156,7 +209,7 @@ function handleClick(event) {
 //PROTOTYPE METHODS
 //calculates the percentages and displays them to page
 Product.prototype.getPercentage = function() {
-  return this.numberOfClicks / this.numberOfDisplays;
+  return this.numberOfClicks / this.numberOfViews;
 };
 
 //--------------------START OF APPLICATION-----------------------
