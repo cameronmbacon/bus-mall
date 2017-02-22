@@ -2,13 +2,14 @@
 //---------------------------------------------------------------------
 // * fix checkRandomNumber function - CHECK!
 // * fix displayProducts function - CHECK!
-// * fix event listener -
-// * control the flow of the survey by concluding it after the participant has made 25 selections (clicks) -
+// * fix event listener - CHECK!
+// * control the flow of the survey by concluding it after the participant has made 25 selections (clicks) - CHECK!
 //-----------------------------------------------------------------------
 
 //GLOBAL VARIABLES
 var sectionEl = document.getElementById('survey-content');
-var clickLimit = 5; //set to 5 for ease of testing
+var chartEl = document.getElementById('chart');
+var clickLimit = 5;
 var totalClicks = 0;
 
 //CONSTRUCTOR FUNCTION for generating products
@@ -22,7 +23,7 @@ function Product(productName, imageURL, elementID) {
   this.clicksVsDisplayPercentage = 0;
 }
 
-//PROPERTIES ARRAY: this is where I store my objects' properties
+//properties array: this is where I store my objects' properties
 var productProperties = [
   ['bag', 'img/bag.jpg', 'bagEl'],
   ['banana', 'img/banana.jpg', 'bananaEl'],
@@ -46,7 +47,7 @@ var productProperties = [
   ['wine-glass', 'img/wine-glass.jpg', 'wineGlassEl']
 ];
 
-//PRODUCTS ARRAY: new objects are declared inside of the array
+//new objects are declared inside of the array
 var products = [];
 
 //this array stores the random numbers for the currently displayed products
@@ -103,26 +104,27 @@ function renderProductsToPage() {
   }
 };
 
-// //renders results to page at conclusion of survey
-// function renderResultsToPage() {
-//   var unorderedEl = document.createElement('ul');
-//
-//   for (var i = 0; i < products.length; i++) {
-//     var resultsMessage = products[i].numberOfClicks + 'votes for ' + products[i].productName;
-//
-//     var listItemEl = document.createElement('li');
-//     listItemEl.textContent = resultsMessage;
-//
-//     unorderedEl.appendChild(listItemEl);
-//   }
-//
-//   sectionEl.appendChild(unorderedEl);
-// }
+//renders results to page at conclusion of survey
+function renderResultsToPage() {
+  var unorderedEl = document.createElement('ul');
 
-//handles the click event
+  for (var i = 0; i < products.length; i++) {
+    var resultsMessage = products[i].numberOfClicks + ' votes for ' + products[i].productName;
+
+    var listItemEl = document.createElement('li');
+    listItemEl.textContent = resultsMessage;
+
+    unorderedEl.appendChild(listItemEl);
+  }
+
+  chartEl.appendChild(unorderedEl);
+}
+
+//handles the click event and controls flow of survey
 function handleClick(event) {
+  totalClicks++;
+
   if (totalClicks < clickLimit) {
-    console.log('User made a selection.');
 
     var leftImageEl = products[currentRandomNumbers[0]].imageEl;
     var centerImageEl = products[currentRandomNumbers[1]].imageEl;
@@ -130,13 +132,13 @@ function handleClick(event) {
 
     var clickedEliD = event.target.getAttribute('id');
 
-    if (clickedEliD === leftImageEl) {
+    if (clickedEliD === leftImageEl.id) {
       products[currentRandomNumbers[0]].numberOfClicks++;
 
-    } else if (clickedEliD === centerImageEl) {
+    } else if (clickedEliD === centerImageEl.id) {
       products[currentRandomNumbers[1]].numberOfClicks++;
 
-    } else if (clickedEliD === rightImageEl) {
+    } else if (clickedEliD === rightImageEl.id) {
       products[currentRandomNumbers[2]].numberOfClicks++;
     }
 
@@ -144,11 +146,10 @@ function handleClick(event) {
     sectionEl.removeChild(centerImageEl);
     sectionEl.removeChild(rightImageEl);
 
-    totalClicks++;
     checkRandomNumbers();
     renderProductsToPage();
   } else {
-    console.log('End of survey. User has made ' + clickLimit + ' selections.');
+    renderResultsToPage();
   }
 };
 
@@ -158,16 +159,11 @@ Product.prototype.getPercentage = function() {
   return this.numberOfClicks / this.numberOfDisplays;
 };
 
-//--------------------CONSOLE LOGS FOR DEBUGGING-----------------------
+//--------------------START OF APPLICATION-----------------------
 createProducts(); //needs to be called in order to populate arrays
 
-// console.log(productProperties);
-// console.log(products);
-//
-// console.log(currentRandomNumbers);
-//
-checkRandomNumbers();
-// console.log(currentRandomNumbers);
-//
-renderProductsToPage();
-// console.log(products);
+checkRandomNumbers(); //generates and verifies the first set of random numbers
+
+renderProductsToPage(); //renders the first 3 product images to the page
+
+//survey control flow is provided by the handleClick function
