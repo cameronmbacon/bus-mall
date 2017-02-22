@@ -104,35 +104,68 @@ function renderProductsToPage() {
   }
 };
 
+//this function saves all of the products to local storage
+function saveProductsToLocalStorage(productsArray) {
+  localStorage.productsArray = JSON.stringify(productsArray);
+  console.log('Saved to local storage!');
+}
+
+//this function gets all product clicks and returns the newly populated array
+function allProductClicks(productsArray) {
+  var productClicks = [];
+
+  for (var i = 0; i < productsArray.length; i++) {
+    productClicks.push(productsArray[i].numberOfClicks);
+  }
+
+  console.log('All products clicks: ', productClicks);
+
+  return productClicks;
+}
+
+//this function gets all product names and returns the newly populated array
+function allProductNames(productsArray) {
+  var productNames = [];
+
+  for (var i = 0; i < productsArray.length; i++) {
+    productNames.push(productsArray[i].productName);
+  }
+
+  console.log('All product names: ', productNames);
+
+  return productNames;
+}
+
 //renders results to page at conclusion of survey
 //NOW UTILIZES Charts.js LIBRARY!!!
 function renderResultsToPage() {
   var ctx = document.getElementById('chart').getContext('2d');
   var pieCtx = document.getElementById('pie-chart').getContext('2d');
 
-  var barData = [];
-  var pieData = []; //Mmmmmm
+  var allProducts = JSON.parse(localStorage.allProducts); //products array, BUT AS A STRING!
+
+  var clickData = allProductClicks(allProducts);
+  var allNames = allProductNames(allProducts);
+  var pieData = []; //Mmmmmm...pie...
 
   var labelColors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet', 'red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet', 'red', 'orange', 'yellow', 'green', 'blue', 'indigo'];
-
-  var labels = [];
 
   for (var i = 0; i < products.length; i++) {
     products[i].percentage = products[i].getPercentage();
     pieData.push(products[i].percentage);
 
-    barData.push(products[i].numberOfClicks);
+    //barData.push(products[i].numberOfClicks);
 
-    labels.push(products[i].productName);
+    //labels.push(products[i].productName);
   }
 
   var barChartData = {
     type: 'bar',
     data: {
-      labels: labels,
+      labels: allNames,
       datasets: [{
-        label: labels,
-        data: barData,
+        label: 'clicks',
+        data: clickData,
         backgroundColor: labelColors
       }],
     },
@@ -152,9 +185,9 @@ function renderResultsToPage() {
   var pieChartData = {
     type: 'pie',
     data: {
-      labels: labels,
+      labels: allNames,
       datasets: [{
-        label: labels,
+        label: 'clicks / displays',
         data: pieData,
         backgroundColor: labelColors
       }],
@@ -208,6 +241,9 @@ function handleClick(event) {
     var rightImageEl = products[currentRandomNumbers[2]].imageEl;
 
     var clickedEliD = event.target.getAttribute('id');
+
+    saveProductsToLocalStorage(products);
+
     renderResultsToPage();
   }
 };
