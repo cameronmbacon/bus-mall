@@ -8,12 +8,9 @@
 
 //GLOBAL VARIABLES
 var sectionEl = document.getElementById('survey-content');
-<<<<<<< HEAD
-=======
 var chartEl = document.getElementById('chart');
 var clickLimit = 10;
 var totalClicks = 0;
->>>>>>> c6c27160ee73bf32aded919e31dd294f606b9ea7
 
 //CONSTRUCTOR FUNCTION for generating products
 function Product(productName, imagePath, elementID) {
