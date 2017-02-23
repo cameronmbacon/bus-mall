@@ -1,8 +1,17 @@
+body {
+  font-size: 16px;
+}
+
 .wrapper {
   width: 80%;
   min-width: 640px;
   margin: 0 auto;
   text-align: center;
+}
+
+.page-title {
+  font-size: 500%;
+  margin-bottom: 0;
 }
 
 #survey-content {

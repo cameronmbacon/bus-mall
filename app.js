@@ -8,7 +8,6 @@
 
 //GLOBAL VARIABLES
 var sectionEl = document.getElementById('survey-content');
-var chartEl = document.getElementById('chart');
 var clickLimit = 10;
 var totalClicks = 0;
 
@@ -20,7 +19,7 @@ function Product(productName, imagePath, elementID) {
   this.imageEl;
   this.numberOfViews = 0;
   this.numberOfClicks = 0;
-  this.percentage = 0;
+  this.percentage = (this.numberOfClicks / this.numberOfViews) * 100;
 }
 
 //properties array: this is where I store my objects' properties
@@ -56,8 +55,18 @@ var currentRandomNumbers = [];
 // FUNCTION DECLARATIONS
 //iterates with constructor function and pushes objects into PRODUCTS ARRAY
 function createProducts() {
-  for (var i = 0; i < productProperties.length; i++) {
-    products.push(new Product(productProperties[i][0], productProperties[i][1], productProperties[i][2]));
+  if (localStorage.productsArray) {
+    products = JSON.parse(localStorage.productsArray);
+
+    for (var i = 0; i < products.length; i++) {
+      Object.setPrototypeOf(products[i], Product.prototype);
+    }
+
+    console.log(products);
+  } else {
+    for (var i = 0; i < productProperties.length; i++) {
+      products.push(new Product(productProperties[i][0], productProperties[i][1], productProperties[i][2]));
+    }
   }
 };
 
@@ -101,6 +110,8 @@ function renderProductsToPage() {
     sectionEl.appendChild(products[currentRandomNumbers[i]].imageEl);
 
     products[currentRandomNumbers[i]].numberOfViews++;
+
+    products[currentRandomNumbers[i]].getPercentage();
   }
 };
 
@@ -136,75 +147,17 @@ function allProductNames(productsArray) {
   return productNames;
 }
 
-//renders results to page at conclusion of survey
-//NOW UTILIZES Charts.js LIBRARY!!!
-function renderResultsToPage() {
-  var ctx = document.getElementById('chart').getContext('2d');
-  var pieCtx = document.getElementById('pie-chart').getContext('2d');
+//this function gets all product percentages and returns the newly populated array
+function allProductPercentages(productsArray) {
+  var productPercentages = [];
 
-  var allProducts = JSON.parse(localStorage.allProducts); //products array, BUT AS A STRING!
-
-  var clickData = allProductClicks(allProducts);
-  var allNames = allProductNames(allProducts);
-  var pieData = []; //Mmmmmm...pie...
-
-  var labelColors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet', 'red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet', 'red', 'orange', 'yellow', 'green', 'blue', 'indigo'];
-
-  for (var i = 0; i < products.length; i++) {
-    products[i].percentage = products[i].getPercentage();
-    pieData.push(products[i].percentage);
-
-    //barData.push(products[i].numberOfClicks);
-
-    //labels.push(products[i].productName);
+  for (var i = 0; i < productsArray.length; i++) {
+    productPercentages.push(productsArray[i].percentage);
   }
 
-  var barChartData = {
-    type: 'bar',
-    data: {
-      labels: allNames,
-      datasets: [{
-        label: 'clicks',
-        data: clickData,
-        backgroundColor: labelColors
-      }],
-    },
-    options: {
-      scales: {
-        yAxes: [{
-          ticks: {
-            beginAtZero: true
-          }
-        }]
-      }
-    }
-  };
+  console.log('All product percentages: ', productPercentages);
 
-  var myBarChart = new Chart(ctx, barChartData);
-
-  var pieChartData = {
-    type: 'pie',
-    data: {
-      labels: allNames,
-      datasets: [{
-        label: 'clicks / displays',
-        data: pieData,
-        backgroundColor: labelColors
-      }],
-    },
-    options: {
-      circumference: (2 * Math.PI),
-      scales: {
-        yAxes: [{
-          ticks: {
-            beginAtZero: true
-          }
-        }]
-      }
-    }
-  };
-
-  var myPieChart = new Chart(pieCtx, pieChartData);
+  return productPercentages;
 }
 
 //handles the click event and controls flow of survey
@@ -222,11 +175,17 @@ function handleClick(event) {
     if (clickedEliD === leftImageEl.id) {
       products[currentRandomNumbers[0]].numberOfClicks++;
 
+      products[currentRandomNumbers[0]].getPercentage();
+
     } else if (clickedEliD === centerImageEl.id) {
       products[currentRandomNumbers[1]].numberOfClicks++;
 
+      products[currentRandomNumbers[1]].getPercentage();
+
     } else if (clickedEliD === rightImageEl.id) {
       products[currentRandomNumbers[2]].numberOfClicks++;
+
+      products[currentRandomNumbers[2]].getPercentage();
     }
 
     sectionEl.removeChild(leftImageEl);
@@ -243,15 +202,13 @@ function handleClick(event) {
     var clickedEliD = event.target.getAttribute('id');
 
     saveProductsToLocalStorage(products);
-
-    renderResultsToPage();
   }
 };
 
-//PROTOTYPE METHODS
-//calculates the percentages and displays them to page
+//METHODS
 Product.prototype.getPercentage = function() {
-  return (this.numberOfClicks / this.numberOfViews) * 100;
+  this.percentage = (this.numberOfClicks / this.numberOfViews) * 100;
+  return this.percentage;
 };
 
 //--------------------START OF APPLICATION-----------------------
