@@ -49,11 +49,15 @@ footer {
 
 .chart-link {
   margin: 0 auto;
-  padding: 5px 5px;
-  width: 100px;
-  height: 60px;
+  width: 180px;
+  height: 100px;
   background-color: green;
-  font-size: 18px;
-  color: white;
   border: 2px solid black;
+}
+
+.chart-link a {
+  margin: 0 auto;
+  font-size: 32px;
+  font-weight: bolder;
+  color: white;
 }
