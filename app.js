@@ -56,7 +56,7 @@ function createProducts() {
       Object.setPrototypeOf(products[i], Product.prototype);
     }
 
-    console.log(products);
+    //console.log(products);
   } else {
     for (var i = 0; i < productProperties.length; i++) {
       products.push(new Product(productProperties[i][0], productProperties[i][1], productProperties[i][2]));
@@ -69,7 +69,7 @@ function getRandomNumber() {
   return Math.floor(Math.random() * productProperties.length);
 };
 
-//validates the random number selections before displaying products on page then populates currentRandomNumbers array with the random numbers
+//validates the random number selections before pushing the numbers to currentRandomNumbers to ensure each group products is a simple random sample
 function checkRandomNumbers() {
   var leftIndex = getRandomNumber();
   var centerIndex = getRandomNumber();
@@ -123,7 +123,7 @@ function allProductClicks(productsArray) {
     productClicks.push(productsArray[i].numberOfClicks);
   }
 
-  console.log('All product clicks: ', productClicks);
+  //console.log('All product clicks: ', productClicks);
 
   return productClicks;
 }
@@ -136,7 +136,7 @@ function allProductNames(productsArray) {
     productNames.push(productsArray[i].productName);
   }
 
-  console.log('All product names: ', productNames);
+  //console.log('All product names: ', productNames);
 
   return productNames;
 }
@@ -149,7 +149,7 @@ function allProductPercentages(productsArray) {
     productPercentages.push(productsArray[i].percentage);
   }
 
-  console.log('All product percentages: ', productPercentages);
+  //console.log('All product percentages: ', productPercentages);
 
   return productPercentages;
 }

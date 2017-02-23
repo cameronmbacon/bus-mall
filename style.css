@@ -44,5 +44,16 @@ img {
 }
 
 footer {
-  margin-top: 15%;
+  margin-top: 5%;
+}
+
+.chart-link {
+  margin: 0 auto;
+  padding: 5px 5px;
+  width: 100px;
+  height: 60px;
+  background-color: green;
+  font-size: 18px;
+  color: white;
+  border: 2px solid black;
 }
