@@ -79,6 +79,13 @@ function renderResultsToPage() {
           ticks: {
             beginAtZero: true
           }
+        }],
+        xAxes: [{
+          ticks: {
+            fontSize: 24,
+            fontColor: 'navy',
+            beginAtZero: true
+          }
         }]
       }
     }
@@ -91,7 +98,7 @@ function renderResultsToPage() {
     data: {
       labels: allNames,
       datasets: [{
-        label: 'clicks / displays',
+        label: '%',
         data: pieData,
         backgroundColor: labelColors
       }],

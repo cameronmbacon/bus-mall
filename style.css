@@ -2,6 +2,12 @@ body {
   font-size: 16px;
 }
 
+.whole-page {
+  background-image: url("img/background.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 .wrapper {
   width: 80%;
   min-width: 640px;
@@ -26,8 +32,8 @@ img {
 }
 
 #pie-chart {
-  max-width: 80%;
-  height: 80%;
+  max-width: 70%;
+  height: 70%;
   margin: 0 auto;
 }
 
@@ -35,4 +41,8 @@ img {
   max-width: 80%;
   height: 80%;
   margin: 0 auto;
+}
+
+footer {
+  margin-top: 15%;
 }
