@@ -18,7 +18,7 @@ function allProductClicks(productsArray) {
     productClicks.push(productsArray[i].numberOfClicks);
   }
 
-  console.log('All products clicks: ', productClicks);
+  console.log('All product clicks: ', productClicks);
 
   return productClicks;
 }
@@ -49,6 +49,21 @@ function allProductPercentages(productsArray) {
   return productPercentages;
 }
 
+//this function takes 5 colors as arguments and pushes them to the labelColors array
+function setLabelColors(colorOne, colorTwo, colorThree, colorFour, colorFive) {
+  var colors = [];
+
+  for (var i = 0; i < 4; i++) {
+    colors.push(colorOne);
+    colors.push(colorTwo);
+    colors.push(colorThree);
+    colors.push(colorFour);
+    colors.push(colorFive);
+  }
+
+  return colors;
+};
+
 //renders results to page at conclusion of survey
 //NOW UTILIZES Charts.js LIBRARY!!!
 function renderResultsToPage() {
@@ -61,7 +76,7 @@ function renderResultsToPage() {
   var allNames = allProductNames(allProducts);
   var pieData = allProductPercentages(allProducts); //Mmmmmm...pie...
 
-  var labelColors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet', 'red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet', 'red', 'orange', 'yellow', 'green', 'blue', 'indigo'];
+  var labelColors = setLabelColors('blue', 'yellow', 'red', 'purple', 'green');
 
   var barChartData = {
     type: 'bar',
@@ -70,13 +85,15 @@ function renderResultsToPage() {
       datasets: [{
         label: 'clicks',
         data: clickData,
-        backgroundColor: labelColors
+        backgroundColor: 'green'
       }],
     },
     options: {
       scales: {
         yAxes: [{
           ticks: {
+            fontSize: 18,
+            fontColor: 'blue',
             beginAtZero: true
           }
         }],
