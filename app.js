@@ -50,7 +50,7 @@ var currentRandomNumbers = [];
 //iterates with constructor function and pushes objects into PRODUCTS ARRAY
 function createProducts() {
   if (localStorage.productsArray) {
-    products = JSON.parse(localStorage.productsArray);
+    products = JSON.parse(localStorage.productsArray); //this happens when returning to the page
 
     for (var i = 0; i < products.length; i++) {
       Object.setPrototypeOf(products[i], Product.prototype);
