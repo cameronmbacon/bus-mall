@@ -1,14 +1,8 @@
-//LET'S BREAK THIS DOWN A BIT!
-//---------------------------------------------------------------------
-// * fix checkRandomNumber function - CHECK!
-// * fix displayProducts function - CHECK!
-// * fix event listener - CHECK!
-// * control the flow of the survey by concluding it after the participant has made 25 selections (clicks) - CHECK!
-//-----------------------------------------------------------------------
+'use strict';
 
 //GLOBAL VARIABLES
 var sectionEl = document.getElementById('survey-content');
-var clickLimit = 10;
+var clickLimit = 25;
 var totalClicks = 0;
 
 //CONSTRUCTOR FUNCTION for generating products
@@ -129,7 +123,7 @@ function allProductClicks(productsArray) {
     productClicks.push(productsArray[i].numberOfClicks);
   }
 
-  console.log('All products clicks: ', productClicks);
+  console.log('All product clicks: ', productClicks);
 
   return productClicks;
 }
@@ -206,8 +200,10 @@ function handleClick(event) {
 };
 
 //METHODS
+//this method calculates the percentage for number of times clicked when viewed
 Product.prototype.getPercentage = function() {
   this.percentage = (this.numberOfClicks / this.numberOfViews) * 100;
+  this.percentage = this.percentage.toFixed(2);
   return this.percentage;
 };
 
